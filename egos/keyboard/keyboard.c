@@ -3,6 +3,10 @@
 #include "common.h"
 #include "console.h"
 
+#define INVALID_CODE -1
+
+static unsigned char charCode = INVALID_CODE;
+
 
 unsigned char kbdus[128] =
 {
@@ -44,17 +48,24 @@ unsigned char kbdus[128] =
     0,	/* All other keys are undefined */
 };
 
-void printKb(){
+void storeCode(){
 	unsigned char scancode = inb(0x60);
 	if(scancode & 0x80) {
 		//.....OnReleased
 	}
 	else {
-		printk("%c", kbdus[scancode]);
+		charCode = kbdus[scancode];
 	}
 }
 
+unsigned char getChar(){
+	unsigned char c = charCode;
+	if(charCode != INVALID_CODE){
+		charCode = INVALID_CODE;
+	}
+	return c;
+}
 
 void init_kb(){
-	register_interrupt_handler(IRQ1, &printKb);
+	register_interrupt_handler(IRQ1, &storeCode);
 }

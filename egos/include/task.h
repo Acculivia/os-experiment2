@@ -55,6 +55,9 @@ struct task_struct {
 	struct mm_struct *mm; 		// 当前进程的内存地址映像
 	struct context context; 	// 进程切换需要的上下文信息
 	struct task_struct *next; 	// 链表指针
+
+	int priority; // 进程优先级
+	int timepiece;
 };
 
 // 全局 pid 值

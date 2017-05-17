@@ -28,6 +28,8 @@
 #include "heap.h"
 #include "task.h"
 #include "sched.h"
+#include "shell.h"
+#include "io.h"
 
 // 内核初始化函数
 void kern_init();
@@ -99,10 +101,7 @@ int thread(void *arg)
 
 	return 0;
 }
-/////////////////////////////
 
-
-/////v/////////////////////////
 void kern_init()
 {
 	init_debug();
@@ -120,7 +119,7 @@ void kern_init()
 	printk("kernel in memory end:   0x%08X\n", kern_end);
 	printk("kernel in memory used:   %d KB\n\n", (kern_end - kern_start) / 1024);
 	
-	// show_memory_map();
+	//show_memory_map();
 	init_pmm();
 	init_vmm();
 	init_heap();
@@ -143,90 +142,11 @@ void kern_init()
 		}
 	}*/
 
-	//DA GOONG CHENNNNNG
-#define SIZE 512 / 4
+	//init_shell();
+	test_io();
 
-	printk("read from disk: \n");
-	while(inb(0x1f7) & 0xc0 != 0x40)
+	while(1)
 		;
-
-
-	char * a[1000];
-	for(int i = 0; i < 100; ++i)
-		a[i] = 0;
-
-	outb(0x1f2, 1);
-	outb(0x1f3, 0);//lbalow
-	outb(0x1f4, 0);//lbamid
-	outb(0x1f5, 0);//lbahigh
-	outb(0x1f6, 0xe0);//controls + lba
-	outb(0x1f7, 0x20);
-
-	while(inb(0x1f7) & 0xc0 != 0x40)
-		;
-
-	insl(0x1f0, (void *)a, SIZE);
-
-	for(int i = 0; i < 100; ++i){
-		printk("%x ", a[i]);
-		++i;
-		printk("%x  ", a[i]);
-	}
-
-	printk("\n\n");
-//---------------------------------------------
-	printk("write to disk: \n");
-	while(inb(0x1f7) & 0xc0 != 0x40)
-		;
-
-	for(int i = 0; i < 100; ++i)
-		a[i] = 0x12 + (0x34 << 8);
-
-	outb(0x1f2, 1);
-	outb(0x1f3, 0);//lbalow
-	outb(0x1f4, 0);//lbamid
-	outb(0x1f5, 0);//lbahigh
-	outb(0x1f6, 0xe0);//controls + lba
-	outb(0x1f7, 0x30);
-
-	while(inb(0x1f7) & 0xc0 != 0x40)
-		;
-
-	outsl(0x1f0, (void *)a, SIZE);
-
-	/*for(int i = 0; i < 100; ++i){
-		printk("%x ", a[i]);
-		++i;
-		printk("%x  ", a[i]);
-	}*/
-	printk("\n\n");
-
-////////-------
-	printk("read from disk: \n");
-	while(inb(0x1f7) & 0xc0 != 0x40)
-		;
-
-	for(int i = 0; i < 100; ++i)
-		a[i] = 0;
-
-	outb(0x1f2, 1);
-	outb(0x1f3, 0);//lbalow
-	outb(0x1f4, 0);//lbamid
-	outb(0x1f5, 0);//lbahigh
-	outb(0x1f6, 0xe0);//controls + lba
-	outb(0x1f7, 0x20);
-
-	while(inb(0x1f7) & 0xc0 != 0x40)
-		;
-
-	insl(0x1f0, (void *)a, SIZE);
-
-	for(int i = 0; i < 100; ++i){
-		printk("%x ", a[i]);
-		++i;
-		printk("%x  ", a[i]);
-	}
-
 
 
 	while (1) {

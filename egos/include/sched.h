@@ -36,6 +36,11 @@ void init_sched();
 // 任务调度
 void schedule();
 
+#ifdef WITH_PRIORITY
+#ifdef WITH_PREEMTIVE
+#endif
+#endif
+
 // 任务切换准备
 void change_task_to(struct task_struct *next);
 

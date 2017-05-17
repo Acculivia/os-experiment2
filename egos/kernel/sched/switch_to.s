@@ -16,6 +16,7 @@ switch_to:
         mov [eax+8],  ebx
         mov [eax+12], esi
         mov [eax+16], edi
+
         pushf
         pop ecx
         mov [eax+20], ecx
@@ -27,6 +28,7 @@ switch_to:
         mov ebx, [eax+8]
         mov esi, [eax+12]
         mov edi, [eax+16]
+        
         mov eax, [eax+20]
         push eax
         popf
