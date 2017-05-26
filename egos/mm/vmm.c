@@ -1,20 +1,4 @@
-/*
- * =====================================================================================
- *
- *       Filename:  vmm.c
- *
- *    Description:  虚拟内存管理
- *
- *        Version:  1.0
- *        Created:  2013年11月17日 16时59分53秒
- *       Revision:  none
- *       Compiler:  gcc
- *
- *         Author:  Hurley (LiuHuan), liuhuan1992@gmail.com
- *        Company:  Class 1107 of Computer Science and Technology
- *
- * =====================================================================================
- */
+//虚拟内存管理
 
 #include "idt.h"
 #include "string.h"
@@ -41,7 +25,9 @@ void init_vmm()
 
 	uint32_t *pte = (uint32_t *)pte_kern;
 	// 不映射第 0 页，便于跟踪 NULL 指针
+	//printk("PTE_COUNT * PTE_SIZE: %d\n", PTE_COUNT * PTE_SIZE);
 	for (i = 1; i < PTE_COUNT * PTE_SIZE; i++) {
+		//printk("pte%d: %x\n", i, (i << 12) | PAGE_PRESENT | PAGE_WRITE);
 		pte[i] = (i << 12) | PAGE_PRESENT | PAGE_WRITE;
 	}
 
@@ -79,10 +65,11 @@ void map(pgd_t *pgd_now, uint32_t va, uint32_t pa, uint32_t flags)
 	pte[pte_idx] = (pa & PAGE_MASK) | flags;
 
 	// 通知 CPU 更新页表缓存
+	//printk("INVLPG VA at %x\n", va);
 	asm volatile ("invlpg (%0)" : : "a" (va));
 }
 
-void unmap(pgd_t *pgd_now, uint32_t va)
+void unmap(pgd_t *pgd_now, uint32_t va)//////!!!!!!!!!!!!!!!!!!!!!
 {
 	uint32_t pgd_idx = PGD_INDEX(va);
 	uint32_t pte_idx = PTE_INDEX(va);
@@ -96,9 +83,12 @@ void unmap(pgd_t *pgd_now, uint32_t va)
 	// 转换到内核线性地址
 	pte = (pte_t *)((uint32_t)pte + PAGE_OFFSET);
 
+	printk("pte[%d]: %X\n", pte_idx, pte[pte_idx]);
+
 	pte[pte_idx] = 0;
 
 	// 通知 CPU 更新页表缓存
+	//printk("INVLPG VA at %x\n", va);
 	asm volatile ("invlpg (%0)" : : "a" (va));
 }
 

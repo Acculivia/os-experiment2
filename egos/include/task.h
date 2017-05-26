@@ -1,21 +1,3 @@
-/*
- * =====================================================================================
- *
- *       Filename:  task.h
- *
- *    Description:  进程管理相关的定义
- *
- *        Version:  1.0
- *        Created:  2013年11月20日 09时18分41秒
- *       Revision:  none
- *       Compiler:  gcc
- *
- *         Author:  Hurley (LiuHuan), liuhuan1992@gmail.com
- *        Company:  Class 1107 of Computer Science and Technology
- *
- * =====================================================================================
- */
-
 #ifndef INCLUDE_TASK_H_
 #define INCLUDE_TASK_H_
 
@@ -57,7 +39,7 @@ struct task_struct {
 	struct task_struct *next; 	// 链表指针
 
 	int priority; // 进程优先级
-	int timepiece;
+	int timepiece;// 时间片
 };
 
 // 全局 pid 值
@@ -65,6 +47,11 @@ extern pid_t now_pid;
 
 // 内核线程创建
 int32_t kernel_thread(int (*fn)(void *), void *arg);
+
+void waiting_task_cancel(struct task_struct * task);
+void running_task_cancel(struct task_struct * task);
+void wait_task_append(struct task_struct * task);
+void running_task_append(struct task_struct * task);
 
 // 线程退出函数
 void kthread_exit();

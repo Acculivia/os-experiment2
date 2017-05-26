@@ -1,21 +1,4 @@
-/*
- * =====================================================================================
- *
- *       Filename:  idt.c
- *
- *    Description:  中断描述符与中断相关的函数定义
- *
- *        Version:  1.0
- *        Created:  2013年11月12日 20时10分55秒
- *       Revision:  none
- *       Compiler:  gcc
- *
- *         Author:  Hurley (LiuHuan), liuhuan1992@gmail.com
- *        Company:  Class 1107 of Computer Science and Technology
- *
- * =====================================================================================
- */
-
+//idt相关。就是设置一堆硬件调用的中断函数。
 #include "common.h"
 #include "string.h"
 #include "debug.h"
@@ -90,7 +73,7 @@ void init_idt()
 	idt_set_gate(10, (uint32_t)isr10, 0x08, 0x8E);
 	idt_set_gate(11, (uint32_t)isr11, 0x08, 0x8E);
 	idt_set_gate(12, (uint32_t)isr12, 0x08, 0x8E);
-	idt_set_gate(13, (uint32_t)isr13, 0x08, 0x8E);
+	idt_set_gate(13, (uint32_t)isr13, 0x08, 0x8E);////////////....gp?
 	idt_set_gate(14, (uint32_t)isr14, 0x08, 0x8E);
 	idt_set_gate(15, (uint32_t)isr15, 0x08, 0x8E);
 	idt_set_gate(16, (uint32_t)isr16, 0x08, 0x8E);
@@ -151,6 +134,7 @@ static void idt_set_gate(uint8_t num, uint32_t base, uint16_t sel, uint8_t flags
 // 调用中断处理函数
 void isr_handler(pt_regs *regs)
 {
+	printk("interrupt %d\n", regs->int_no);
 	if (interrupt_handlers[regs->int_no]) {
 	      interrupt_handlers[regs->int_no](regs);
 	} else {
@@ -171,6 +155,7 @@ void irq_handler(pt_regs *regs)
 	// 按照我们的设置，从 32 号中断起为用户自定义中断
 	// 因为单片的 Intel 8259A 芯片只能处理 8 级中断
 	// 故大于等于 40 的中断号是由从片处理的
+	//printk("IRQ %d\n", regs->int_no);
 	if (regs->int_no >= 40) {
 		// 发送重设信号给从片
 		outb(0xA0, 0x20);

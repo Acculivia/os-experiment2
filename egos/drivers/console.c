@@ -1,20 +1,5 @@
-/*
- * =====================================================================================
- *
- *       Filename:  console.c
- *
- *    Description:  屏幕操作的一些函数实现
- *
- *        Version:  1.0
- *        Created:  2013年11月02日 21时58分00秒
- *       Revision:  none
- *       Compiler:  gcc
- *
- *         Author:  Hurley (LiuHuan), liuhuan1992@gmail.com
- *        Company:  Class 1107 of Computer Science and Technology
- *
- * =====================================================================================
- */
+//命令行相关函数
+
 
 #include "console.h"
 #include "common.h"

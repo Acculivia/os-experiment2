@@ -1,20 +1,4 @@
-/*
- * =====================================================================================
- *
- *       Filename:  pmm.c
- *
- *    Description:  页内存管理
- *
- *        Version:  1.0
- *        Created:  2013年11月16日 12时00分35秒
- *       Revision:  none
- *       Compiler:  gcc
- *
- *         Author:  Hurley (LiuHuan), liuhuan1992@gmail.com
- *        Company:  Class 1107 of Computer Science and Technology
- *
- * =====================================================================================
- */
+//物理内存管理
 
 #include "multiboot.h"
 #include "common.h"

@@ -1,7 +1,7 @@
 #ifndef INCLUDE_IO
 #define INCLUDE_IO
 
-#define SIZE 256
+#define SECT_SIZE 256 / 2
 
 //从硬盘读取一个扇区
 void * read_sect(unsigned char count, int lba, void * buff);

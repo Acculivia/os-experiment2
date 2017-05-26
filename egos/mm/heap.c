@@ -1,24 +1,8 @@
-/*
- * =====================================================================================
- *
- *       Filename:  heap.c
- *
- *    Description:  内核的简单堆管理
- *
- *        Version:  1.0
- *        Created:  2013年11月18日 14时57分29秒
- *       Revision:  none
- *       Compiler:  gcc
- *
- *         Author:  Hurley (LiuHuan), liuhuan1992@gmail.com
- *        Company:  Class 1107 of Computer Science and Technology
- *
- * =====================================================================================
- */
 #include "debug.h"
 #include "pmm.h"
 #include "vmm.h"
 #include "heap.h"
+#include "common.h"
 
 // 申请内存块
 static void alloc_chunk(uint32_t start, uint32_t len);
@@ -44,6 +28,7 @@ void init_heap()
 
 void *kmalloc(uint32_t len)
 {
+	disable_intr();
 	// 所有申请的内存长度加上管理头的长度
 	// 因为在内存申请和释放的时候要通过该结构去管理
 	len += sizeof(header_t);
@@ -87,21 +72,24 @@ void *kmalloc(uint32_t len)
 	if (prev_header) {
 		prev_header->next = cur_header;
 	}
+	enable_intr();
 
 	return (void*)(chunk_start + sizeof(header_t));
 }
 
 void kfree(void *p)
 {
+	disable_intr();
 	// 指针回退到管理结构，并将已使用标记置 0
 	header_t *header = (header_t*)((uint32_t)p - sizeof(header_t));
 	header->allocated = 0;
 
 	// 粘合内存块
 	glue_chunk(header);
+	enable_intr();
 }
 
-void alloc_chunk(uint32_t start, uint32_t len)
+void alloc_chunk(uint32_t start, uint32_t len)//首次适应
 {
 	// 如果当前堆的位置已经到达界限则申请内存页
 	// 必须循环申请内存页直到有到足够的可用内存
@@ -112,8 +100,9 @@ void alloc_chunk(uint32_t start, uint32_t len)
 	}
 }
 
-void free_chunk(header_t *chunk)
+void free_chunk(header_t *chunk)///////////????????????
 {
+	printk("------\nfreeing chunk: %x\n", chunk);
 	if (chunk->prev == 0) {
 		heap_first = 0;
 	} else {
@@ -123,9 +112,13 @@ void free_chunk(header_t *chunk)
 	// 空闲的内存超过 1 页的话就释放掉
 	while ((heap_max - PAGE_SIZE) >= (uint32_t)chunk) {
 		heap_max -= PAGE_SIZE;
+
 		uint32_t page;
+
 		get_mapping(pgd_kern, heap_max, &page);
+		printk("unmapping page %x\n", heap_max);
 		unmap(pgd_kern, heap_max);
+		printk("freeing page %x\n\n", page);
 		pmm_free_page(page);
 	}
 }
@@ -182,8 +175,6 @@ void test_heap()
 	printk("kmalloc   500 byte in 0x%X\n", addr2);
 	void *addr3 = kmalloc(5000);
 	printk("kmalloc  5000 byte in 0x%X\n", addr3);
-	void *addr4 = kmalloc(50000);
-	printk("kmalloc 50000 byte in 0x%X\n\n", addr4);
 
 	printk("free mem in 0x%X\n", addr1);
 	kfree(addr1);
@@ -191,7 +182,5 @@ void test_heap()
 	kfree(addr2);
 	printk("free mem in 0x%X\n", addr3);
 	kfree(addr3);
-	printk("free mem in 0x%X\n\n", addr4);
-	kfree(addr4);
 }
 

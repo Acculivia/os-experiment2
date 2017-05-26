@@ -30,6 +30,7 @@
 #include "sched.h"
 #include "shell.h"
 #include "io.h"
+#include "fs.h"
 
 // 内核初始化函数
 void kern_init();
@@ -90,8 +91,10 @@ __attribute__((section(".init.text"))) void kern_entry()
 
 int flag = 0;
 
-int thread(void *arg)
+int thread(int * arg)
 {
+	printk("%d received\n", arg[1]);
+	return 123;
 	while (1) {
 		if (flag == 1) {
 			printk_color(rc_black, rc_green, "B");
@@ -130,10 +133,11 @@ void kern_init()
 
 	init_sched();
 
-	//kernel_thread(thread, NULL);
-
 	// 开启中断
 	enable_intr();
+
+	//int qq[] = {1, 2, 3, 4, 5};
+	//kernel_thread(thread, qq);
 
 	/*while (1) {
 		if (flag == 0) {
@@ -144,6 +148,8 @@ void kern_init()
 
 	//init_shell();
 	test_io();
+
+
 
 	while(1)
 		;

@@ -1,3 +1,5 @@
+//键盘相关。此处有参考。
+
 #include "keyboard.h"
 #include "idt.h"
 #include "common.h"

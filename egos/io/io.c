@@ -1,9 +1,11 @@
 #include "io.h"
+#include "string.h"
+#include "fs.h"
 
 /*
 //io的主要部分就是如何从硬盘中读取和写入扇区。网上很多地方推荐
 //的办法是切换回rmode然后使用bios调用，因为“其它方法会复杂一些”。
-//诚然如果使用汇编去编写的话，代码量是有血长；但是如下所示，C语言
+//诚然如果使用汇编去编写的话，代码量是有点长；但是如下所示，C语言
 //已经大大地把代码量给简化了，最终也无非调用一下硬件的api而已
 //
 //另，在idt部分看到了与ide相关的中断函数。觉得或许应当填到对应的地方上，
@@ -25,7 +27,7 @@ void * read_sect(unsigned char count, int lba, void * buff){
 	while(inb(0x1f7) & 0xc0 != 0x40)
 		;
 
-	insl(0x1f0, buff, SIZE);
+	for(int i = 0; i < count; ++i)insl(0x1f0, buff, SECT_SIZE);
 }
 
 void * write_sect(unsigned char count, int lba, void * buff){
@@ -43,7 +45,7 @@ void * write_sect(unsigned char count, int lba, void * buff){
 	while(inb(0x1f7) & 0xc0 != 0x40)
 		;
 
-	outsl(0x1f0, buff, SIZE);
+	for(int i = 0; i < count; ++i)outsl(0x1f0, buff, SECT_SIZE);
 }
 
 //测试通过  哦啦啦啦啦啦～～～～
@@ -52,20 +54,22 @@ void * write_sect(unsigned char count, int lba, void * buff){
 //我搜寻资料的能力太强？
 void test_io(){
 	char * a[256];
-	for(int i = 0; i < 256; ++i) a[i] = i;
+	for(int i = 0; i < 256; ++i) a[i] = 0;
 
+	printk("Things to write: ");
 	for(int i = 0; i < 100; ++i) printk("%x ", a[i]);
 
-	printk("\n");
+	char string[] = "Hello World!";
+	strcpy(a, string);
 
 	write_sect(1, 0, (void *)a);
 
-	for(int i = 0; i < 256; ++i) a[i] = 0xffff;
-
+	for(int i = 0; i < 256; ++i) a[i] = 'a';
 
 	write_sect(1, 1, (void *)a);
 	read_sect(1, 0, (void *)a);
 	//read_sect(1, 1, (void *)a);
 
+	printk("\n\nRead from disk: ");
 	for(int i = 0; i < 100; ++i) printk("%x ", a[i]);
 }

@@ -1,21 +1,3 @@
-/*
- * =====================================================================================
- *
- *       Filename:  common.c
- *
- *    Description:  几个屏幕打印函数
- *
- *        Version:  1.0
- *        Created:  2013年11月01日 10时48分57秒
- *       Revision:  none
- *       Compiler:  gcc
- *
- *         Author:  Hurley (LiuHuan), liuhuan1992@gmail.com
- *        Company:  Class 1107 of Computer Science and Technology
- *
- * =====================================================================================
- */
-
 #include "common.h"
 
 // 端口写一个字节

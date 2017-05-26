@@ -1,4 +1,7 @@
 file hx_kernel
 target remote :1234
-break kern_entry
-c
+
+b kernel_thread
+b thread
+b free_chunk
+b unmap

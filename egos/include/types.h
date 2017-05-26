@@ -1,21 +1,3 @@
-/*
- * =====================================================================================
- *
- *       Filename:  types.h
- *
- *    Description:  一些类型的定义
- *
- *        Version:  1.0
- *        Created:  2013年10月31日 16时28分07秒
- *       Revision:  none
- *       Compiler:  gcc
- *
- *         Author:  Hurley (LiuHuan), liuhuan1992@gmail.com
- *        Company:  Class 1107 of Computer Science and Technology
- *
- * =====================================================================================
- */
-
 #ifndef INCLUDE_TYPES_H_
 #define INCLUDE_TYPES_H_
 

@@ -16,6 +16,8 @@
  * =====================================================================================
  */
 
+////////抢占式？？
+
 #ifndef INCLUDE_SCHEDULER_H_
 #define INCLUDE_SCHEDULER_H_
 
@@ -29,6 +31,9 @@ extern struct task_struct *wait_proc_head;
 
 // 当前运行的任务
 extern struct task_struct *current;
+extern int active_tasks;
+#define MAX_TASK_NUMBER 10
+#define TIME_PIECE_NUMBER 50
 
 // 初始化任务调度
 void init_sched();
@@ -36,15 +41,12 @@ void init_sched();
 // 任务调度
 void schedule();
 
-#ifdef WITH_PRIORITY
-#ifdef WITH_PREEMTIVE
-#endif
-#endif
-
 // 任务切换准备
 void change_task_to(struct task_struct *next);
 
 // 任务切换
 void switch_to(struct context *prev, struct context *next);
+
+struct task_struct * find_task_with_priority(struct task_struct * current);
 
 #endif 	// INCLUDE_SCHEDULER_H_

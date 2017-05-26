@@ -2,11 +2,11 @@
 ;
 ; 	boot.s -- 内核从这里开始
 ;
-;                 这里还有根据 GRUB Multiboot 规范的一些定义
+;                通过GRUB规范加载内核
 ;
 ; ----------------------------------------------------------------
 
-MBOOT_HEADER_MAGIC 	equ 	0x1BADB002 	; Multiboot 魔数，由规范决定的
+MBOOT_HEADER_MAGIC 	equ 	0x1BADB002 	; GRUB Multiboot 魔数
 
 MBOOT_PAGE_ALIGN 	equ 	1 << 0    	; 0 号位表示所有的引导模块将按页(4KB)边界对齐
 MBOOT_MEM_INFO 		equ 	1 << 1    	; 1 号位通过 Multiboot 信息结构的 mem_* 域包括可用内存的信息
@@ -55,7 +55,7 @@ start:
 	and esp, 0FFFFFFF0H		; 栈地址按照 16 字节对齐
 	mov ebp, 0 			; 帧指针修改为 0
     
-	call kern_entry	; 调用内核入口函数
+	call kern_entry	; 进入！！！！内核！！！！！！
 
 ;-----------------------------------------------------------------------------
 
